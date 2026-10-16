@@ -75,7 +75,7 @@ const icons = ['<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d
 function img(src,name){return '<img src="'+esc(src)+'" alt="'+esc(name)+'" loading="lazy" width="320" height="320">';}
 $$('[data-logo]').forEach(el=>el.src=LOGO);
 $$('[data-hero]').forEach(el=>{const src=HERO[el.dataset.hero]||PHOTOS[el.dataset.hero];if(src)el.src=src;else el.hidden=true;});
-$('#quick-facts').innerHTML=['Woodfired oven','Dine in \u00b7 Pickup \u00b7 Delivery','Open Tue\u2013Sun from 5pm','4.7\u2605 on Google'].map((s,i)=>'<div class="fact">'+icons[i]+'<span>'+s+'</span></div>').join('');
+$('#quick-facts').innerHTML=['Woodfired oven','Dine in \u00b7 Pickup \u00b7 Delivery','Open Tue to Sun from 5pm','4.7\u2605 on Google'].map((s,i)=>'<div class="fact">'+icons[i]+'<span>'+s+'</span></div>').join('');
 const categories=Object.keys(MENU),allItems=Object.values(MENU).flat();
 const itemId=name=>'dish-'+allItems.findIndex(x=>x.name===name);
 const noPhotos=new Set(['Bruschetta','Crispy Loaded Potato','Fries','Rocket Salad','Pollo Romano Pizza',"Kid's Margherita Pizza","Kid's Garlic and Cheese Pizza",'Affogato','Gelato','Mini Homemade Gnocchi with Nutella']);
@@ -99,7 +99,7 @@ function revealHash(focus=false){const target=document.getElementById(location.h
 $('#favourites').addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;e.preventDefault();location.hash=a.getAttribute('href');revealHash(true);});
 window.addEventListener('hashchange',()=>revealHash());
 const lightbox=$('#lightbox');let photoTrigger;
-document.addEventListener('click',e=>{const button=e.target.closest('[data-lightbox]');if(!button)return;const item=allItems.find(x=>x.name===button.dataset.lightbox);photoTrigger=button;$('#lightbox-title').textContent=item.name+' \u2014 '+money(item.price);$('#lightbox-photo').innerHTML=img(HERO[item.name]||PHOTOS[item.name],item.name);$('#lightbox-description').textContent=item.desc;lightbox.showModal();$('#lightbox-close').focus();});
+document.addEventListener('click',e=>{const button=e.target.closest('[data-lightbox]');if(!button)return;const item=allItems.find(x=>x.name===button.dataset.lightbox);photoTrigger=button;$('#lightbox-title').textContent=item.name+' \u00b7 '+money(item.price);$('#lightbox-photo').innerHTML=img(HERO[item.name]||PHOTOS[item.name],item.name);$('#lightbox-description').textContent=item.desc;lightbox.showModal();$('#lightbox-close').focus();});
 $('#lightbox-close').addEventListener('click',()=>lightbox.close());
 lightbox.addEventListener('click',e=>{if(e.target===lightbox){const r=lightbox.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)lightbox.close();}});
 lightbox.addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();$('#lightbox-close').focus();}});
@@ -117,7 +117,7 @@ function melbourne(){const p=Object.fromEntries(new Intl.DateTimeFormat('en-AU',
 const minutes=s=>Number(s.split(':')[0])*60+Number(s.split(':')[1]);
 function clockLabel(s){const [h,m]=s.split(':');return (Number(h)%12||12)+':'+m+'pm';}
 function updateHours(){const now=melbourne(),h=HOURS[now.day];let message;if(!h)message='Closed today \u00b7 opens Tuesday 5pm';else if(now.minutes<1020)message='Opens today at 5pm';else if(now.minutes<minutes(h[1]))message='Open now \u00b7 until '+clockLabel(h[1]);else message=now.day==='Sunday'?'Closed now \u00b7 opens Tuesday 5pm':'Closed now \u00b7 opens tomorrow 5pm';$('#open-status').textContent=message;
- $('#hours-table tbody').innerHTML=days.map(day=>'<tr'+(day===now.day?' aria-current="date"':'')+'><th scope="row">'+day+(day===now.day?'<span class="today">Today</span>':'')+'</th><td>'+(HOURS[day]?clockLabel(HOURS[day][0])+'\u2013'+clockLabel(HOURS[day][1]):'Closed')+'</td></tr>').join('');$('#booking-date').min=now.date;}
+ $('#hours-table tbody').innerHTML=days.map(day=>'<tr'+(day===now.day?' aria-current="date"':'')+'><th scope="row">'+day+(day===now.day?'<span class="today">Today</span>':'')+'</th><td>'+(HOURS[day]?clockLabel(HOURS[day][0])+' to '+clockLabel(HOURS[day][1]):'Closed')+'</td></tr>').join('');$('#booking-date').min=now.date;}
 updateHours();setInterval(updateHours,60000);
 const form=$('#booking-form'),bookingStatus=$('#booking-status');
 function dateDay(date){const d=new Date(date+'T00:00:00Z');return Number.isNaN(d.getTime())?null:new Intl.DateTimeFormat('en-AU',{weekday:'long',timeZone:'Australia/Melbourne'}).format(d);}
